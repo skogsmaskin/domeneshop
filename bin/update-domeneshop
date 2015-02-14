@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+
+var dynamicDomeneshop = require("../index.js");
+
+var usernameAndPassword = process.argv[2].split(":");
+var domains = process.argv.slice(3);
+
+var username = usernameAndPassword[0];
+var password = usernameAndPassword[1];
+
+if(!password || !username) {
+    console.log("No username or password defined");
+}
+
+if(!domains || domains.length === 0) {
+    console.log("No domains defined");
+}
+
+dynamicDomeneshop(username, password, domains);
