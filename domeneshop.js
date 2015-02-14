@@ -6,15 +6,7 @@ var headers = require("./headers");
 var $ = require('cheerio');
 
 
-var login = {
-    username:"**********",
-    password:"**********"
-};
-
-
-exports.login = function() {
-
-    console.log("Logging in");
+exports.login = function(login) {
 
     return rp({
         uri: "https://www.domeneshop.no",
@@ -39,9 +31,17 @@ exports.login = function() {
     });
 };
 
-exports.getDomains = function() {
+exports.logout = function() {
+    return rp({
+        uri: "https://www.domeneshop.no/logout.cgi",
+        headers: extend(headers.getHeaders(), {
+            "Referer": "https://www.domeneshop.no/"
+        })
+    });
+};
 
-    console.log("getting domain info")
+
+exports.getDomains = function() {
 
     return rp({
         uri: "https://www.domeneshop.no/admin.cgi?view=domains",
@@ -60,11 +60,9 @@ exports.getDomains = function() {
 
         return linksObj;
     })
-}
+};
 
-exports.updateSubdomain = function(uri, domains, ip) {
-
-    console.log("updating subdomain");
+exports.getSubdomains = function(uri) {
 
     return rp({
         uri: uri + "&edit=dns",
@@ -77,7 +75,7 @@ exports.updateSubdomain = function(uri, domains, ip) {
 
         var obj = {};
         trs.each(function() {
-            var formValues  = {"modify.x": 5, "modify.y": 4}
+            var formValues  = {updateUrl: uri + "&edit=dns", "modify.x": 5, "modify.y": 4};
             var $tr     = $(this);
             var url     = $tr.find("td").first().text().split("->")[0].trim();
 
@@ -94,29 +92,19 @@ exports.updateSubdomain = function(uri, domains, ip) {
         });
 
         return obj;
-    }).then(function(domainsSettings) {
-        if(!Array.isArray(domains)) {
-            domains = [domains];
-        }
+    });
+};
 
-        return Promise.map(domains, function(domain) {
-            var settings = domainsSettings[domain]
-            if(!settings) {
-                return;
-            }
-            settings.data = ip;
+exports.updateSubdomain = function(uri, data) {
+    var postData = querystring.stringify(data);
 
-            var postData = querystring.stringify(settings);
-
-            return rp({
-                uri: uri + "&edit=dns",
-                method : "POST",
-                headers: extend(headers.getHeaders(), {
-                    "Content-Length": postData.length,
-                    "Referer": uri + "&edit=dns"
-                }),
-                body: postData
-            });
-        });
+    return rp({
+        uri: uri,
+        method : "POST",
+        headers: extend(headers.getHeaders(), {
+            "Content-Length": postData.length,
+            "Referer": uri
+        }),
+        body: postData
     });
 };
