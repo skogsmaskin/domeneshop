@@ -5,7 +5,7 @@
   "author": "Kent Andersen <kentareandersen@gmail.com>",
   "license": "MIT",
   "bin": {
-    "module-name": "./bin/module-name"
+    "update-domeneshop": "./bin/update-domeneshop"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
