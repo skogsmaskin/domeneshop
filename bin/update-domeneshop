@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-var dynamicDomeneshop = require("../index.js");
+var dynamicDomeneshop = require("../src/index");
 
 var usernameAndPassword = process.argv[2].split(":");
 var domains = process.argv.slice(3);
