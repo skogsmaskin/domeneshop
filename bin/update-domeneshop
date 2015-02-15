@@ -2,7 +2,7 @@
 
 var dynamicDomeneshop = require("../src/index");
 
-var usernameAndPassword = process.argv[2].split(":");
+var usernameAndPassword = (process.argv[2] || "").split(":");
 var domains = process.argv.slice(3);
 
 var username = usernameAndPassword[0];
