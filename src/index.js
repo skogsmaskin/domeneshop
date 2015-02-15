@@ -1,8 +1,9 @@
 var Promise = require("bluebird");
-
 var psl = require("psl");
+
 var utils = require("./utils");
 var domeneshop = require("./domeneshop");
+var processedDomains = require("./processed");
 
 var getUnique = function(value, index, self) {
     return self.indexOf(value) === index;
@@ -42,13 +43,17 @@ var updateSubDomainsForDomain = function(domainsToBeUpdated, ip) {
         }).map(function(domain) {
             var settings = subDomainsSettings[domain];
             settings.data = ip;
-            return settings;
+            return [domain, settings];
         });
 
-        return Promise.map(updateSettings, function(setting) {
+        return Promise.map(updateSettings, function(toBeUpdated) {
+            var domain  = toBeUpdated[0];
+            var setting = toBeUpdated[1];
+
             var url = setting.updateUrl;
             delete setting.updateUrl;
 
+            processedDomains.add(domain);
             return domeneshop.updateSubdomain(url, setting);
         }).all();
     }
@@ -75,14 +80,22 @@ module.exports = function(username, password, domains) {
             return !isMatching[1];
 
         }).then(function(notMatchingDomains) {
+            var processed = processedDomains.get();
+            notMatchingDomains = notMatchingDomains.filter(function(domain) {
+                return processed.indexOf(domain[0]) === -1;
+            });
+
             if(notMatchingDomains.length === 0) {
                 console.log("All domains are up to date");
                 return;
             }
+
             var domains = notMatchingDomains.map(function(a) {return a[0]});
 
+            console.log("");
             console.log("The following domains needs updating:");
             domains.forEach(function(a) {console.log(a);});
+            console.log("");
 
             return domeneshop.login({
                 password: password,
@@ -104,9 +117,10 @@ module.exports = function(username, password, domains) {
         });
 
     })
-    .then(domeneshop.logout)
+    .then(processedDomains.write)
+    .always(domeneshop.logout)
     .done(function() {
-        console.log("Updated!");
+        console.log("Done!");
     }, function(error) {
         throw error;
     });
