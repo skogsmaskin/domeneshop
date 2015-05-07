@@ -118,7 +118,7 @@ module.exports = function(username, password, domains) {
 
     })
     .then(processedDomains.write)
-    .always(domeneshop.logout)
+    .finally(domeneshop.logout)
     .done(function() {
         console.log("Done!");
     }, function(error) {
