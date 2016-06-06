@@ -19,7 +19,7 @@ exports.login = function(login) {
         var loginData = querystring.stringify(login);
 
         return rp({
-            uri: "https://www.domeneshop.no/admin.cgi",
+            uri: "https://www.domeneshop.no/admin",
             method : "POST",
             headers: extend(headers.getHeaders(), {
                 "Referer": "https://www.domeneshop.no/",
@@ -33,7 +33,7 @@ exports.login = function(login) {
 
 exports.logout = function() {
     return rp({
-        uri: "https://www.domeneshop.no/logout.cgi",
+        uri: "https://www.domeneshop.no/logout",
         headers: extend(headers.getHeaders(), {
             "Referer": "https://www.domeneshop.no/"
         })
@@ -44,20 +44,19 @@ exports.logout = function() {
 exports.getDomains = function() {
 
     return rp({
-        uri: "https://www.domeneshop.no/admin.cgi?view=domains",
+        uri: "https://www.domeneshop.no/admin?view=domains",
         headers: extend(headers.getHeaders(), {
-            "Referer": "https://www.domeneshop.no/admin.cgi"
+            "Referer": "https://www.domeneshop.no/admin"
         })
     }).then(function(response) {
-
-        var links = $(response).find("a[href^='https://www.domeneshop.no/admin.cgi?id=']");
+        var links = $(response).find("a[href^='https://www.domeneshop.no/admin?id=']");
 
         var linksObj = {}
         links.each(function() {
             var $el = $(this);
             linksObj[$el.text()] = $el.attr("href");
         });
-
+        console.log(linksObj)
         return linksObj;
     })
 };
@@ -67,7 +66,7 @@ exports.getSubdomains = function(uri) {
     return rp({
         uri: uri + "&edit=dns",
         headers: extend(headers.getHeaders(), {
-            "Referer": "https://www.domeneshop.no/admin.cgi?view=domains"
+            "Referer": "https://www.domeneshop.no/admin?view=domains"
         })
     }).then(function(response) {
         var cleanedHtml = response.replace(/<\/td>\s*<\/td>/gi, "");
