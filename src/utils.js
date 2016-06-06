@@ -15,7 +15,7 @@ exports.lookupDNS = function(domain) {
 };
 
 exports.lookupIPaddress = function() {
-    return rp("http://fugal.net/ip.cgi").then(function(respose) {
+    return rp("https://api.ipify.org/?format=text").then(function(respose) {
         return respose.trim();
     });
 };
