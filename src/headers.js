@@ -20,7 +20,6 @@ exports.getCookiesString = function(cookies) {
 
 var defaultHeaders = {
     "Accept"              : "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    "Accept-Encoding"     : "gzip, deflate",
     "Accept-Language"     : "nb,en-GB;q=0.8,en;q=0.6,en-US;q=0.4",
     "Cache-Control"       : "no-cache",
     "Connection"          : "keep-alive",
