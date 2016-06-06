@@ -15,7 +15,7 @@
     "bluebird": "^2.9.8",
     "cheerio": "^0.18.0",
     "psl": "^1.1.2",
-    "request-promise": "^0.4.0",
+    "request-promise": "^3.0.0",
     "xtend": "^4.0.0"
   },
   "devDependencies": {}
