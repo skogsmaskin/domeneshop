@@ -56,7 +56,6 @@ exports.getDomains = function() {
             var $el = $(this);
             linksObj[$el.text()] = $el.attr("href");
         });
-        console.log(linksObj)
         return linksObj;
     })
 };
