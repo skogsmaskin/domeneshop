@@ -50,10 +50,9 @@ exports.getDomains = function() {
         })
     }).then(function(response) {
         var links = $(response).find("a[href^='https://www.domeneshop.no/admin?id=']");
-
         var linksObj = {}
         links.each(function() {
-            var $el = $(this);
+            $el = $(this);
             linksObj[$el.text()] = $el.attr("href");
         });
         return linksObj;
